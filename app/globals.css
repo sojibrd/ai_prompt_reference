@@ -1,0 +1,127 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #f5f7fb;
+  --foreground: #18181b;
+  --muted: #52525b;
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --card-border: rgba(228, 228, 231, 0.7);
+  --primary: #4f46e5;
+  --primary-soft: rgba(79, 70, 229, 0.1);
+  --code-bg: rgba(24, 24, 27, 0.04);
+  --shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
+}
+
+.dark {
+  --background: #09090b;
+  --foreground: #f4f4f5;
+  --muted: #a1a1aa;
+  --card-bg: rgba(24, 24, 27, 0.6);
+  --card-border: rgba(39, 39, 42, 0.9);
+  --primary: #818cf8;
+  --primary-soft: rgba(129, 140, 248, 0.14);
+  --code-bg: rgba(244, 244, 245, 0.06);
+  --shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --font-sans: var(--font-bengali);
+  --font-mono: var(--font-mono-code);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-bengali), system-ui, sans-serif;
+}
+
+.glass-panel {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow);
+}
+
+/* Markdown body — tuned for Bengali prose plus code blocks. */
+.doc-prose {
+  --tw-prose-body: var(--foreground);
+  --tw-prose-headings: var(--foreground);
+  --tw-prose-bold: var(--foreground);
+  --tw-prose-links: var(--primary);
+  --tw-prose-quotes: var(--muted);
+  --tw-prose-code: var(--foreground);
+  --tw-prose-th-borders: var(--card-border);
+  --tw-prose-td-borders: var(--card-border);
+  line-height: 1.9;
+}
+
+.doc-prose :where(h1, h2, h3, h4) {
+  line-height: 1.5;
+  scroll-margin-top: 6rem;
+}
+
+.doc-prose :where(code):not(pre code) {
+  background: var(--code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 0.35rem;
+  font-size: 0.875em;
+  font-weight: 500;
+}
+
+.doc-prose :where(code):not(pre code)::before,
+.doc-prose :where(code):not(pre code)::after {
+  content: none;
+}
+
+.doc-prose pre {
+  background: #18181b;
+  color: #e4e4e7;
+  border: 1px solid var(--card-border);
+  border-radius: 0.75rem;
+  line-height: 1.6;
+}
+
+.doc-prose table {
+  display: block;
+  overflow-x: auto;
+  white-space: normal;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.25);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.45);
+}
+
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
