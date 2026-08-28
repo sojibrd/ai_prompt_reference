@@ -1,5 +1,9 @@
 import fs from "fs";
 import path from "path";
+import { slugify } from "./slug";
+import { href } from "./href";
+
+export { slugify, href };
 
 const ROOT = process.cwd();
 
@@ -7,6 +11,14 @@ export type Doc = {
   slug: string[];
   title: string;
   content: string;
+  /** The category this page sits under, for the breadcrumb. Absent on home. */
+  category?: string;
+};
+
+export type HeadingItem = {
+  id: string;
+  text: string;
+  level: number;
 };
 
 export type Topic = {
@@ -78,11 +90,52 @@ export function getAllDocs(): Doc[] {
         slug: [category, topic],
         title: titleOf(topicMd, topic),
         content: topicMd,
+        category: titleOf(categoryMd, category),
       });
     }
   }
 
   return docs;
+}
+
+/** `##` and `###` only: `#` is the page title and `####` is too fine to index. */
+export function extractHeadings(markdown: string): HeadingItem[] {
+  const headings: HeadingItem[] = [];
+  for (const line of markdown.split(/\r?\n/)) {
+    const match = /^(#{2,3})\s+(.+)$/.exec(line);
+    if (!match) continue;
+    const text = match[2].trim().replace(/[*_`]/g, "");
+    headings.push({ id: slugify(text), text, level: match[1].length });
+  }
+  return headings;
+}
+
+/**
+ * Split the leading `# heading` off the body.
+ *
+ * The title is rendered by the header plate, so leaving it in the markdown
+ * would print it twice.
+ */
+export function parseDoc(doc: Doc): {
+  title: string;
+  body: string;
+  headings: HeadingItem[];
+} {
+  const lines = doc.content.split(/\r?\n/);
+  const bodyLines: string[] = [];
+  let title = "";
+
+  for (const line of lines) {
+    const match = /^#\s+(.+)$/.exec(line);
+    if (!title && match) {
+      title = match[1].trim();
+      continue;
+    }
+    bodyLines.push(line);
+  }
+
+  const body = bodyLines.join("\n").trim();
+  return { title: title || doc.title, body, headings: extractHeadings(body) };
 }
 
 export function getDoc(slug: string[]): Doc | undefined {
@@ -99,8 +152,4 @@ export function getNeighbours(slug: string[]) {
     prev: index > 0 ? docs[index - 1] : undefined,
     next: index >= 0 && index < docs.length - 1 ? docs[index + 1] : undefined,
   };
-}
-
-export function href(slug: string[]): string {
-  return slug.length === 0 ? "/" : `/${slug.join("/")}/`;
 }

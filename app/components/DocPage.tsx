@@ -1,37 +1,34 @@
-import Link from "next/link";
 import Markdown from "./Markdown";
-import { getDoc, getNeighbours, href, type Doc } from "../lib/content";
-
-function NeighbourLink({ doc, direction }: { doc: Doc; direction: "prev" | "next" }) {
-  return (
-    <Link
-      href={href(doc.slug)}
-      className="surface-raised flex-1 px-4 py-3"
-    >
-      <div className="t-label">
-        {direction === "prev" ? "← আগের" : "পরের →"}
-      </div>
-      <div className="t-body mt-1 text-sm">{doc.title}</div>
-    </Link>
-  );
-}
+import DocNav from "./DocNav";
+import TableOfContents from "./TableOfContents";
+import { getDoc, getNeighbours, parseDoc } from "../lib/content";
 
 export default function DocPage({ slug }: { slug: string[] }) {
   const doc = getDoc(slug);
   if (!doc) return null;
 
+  const { title, body, headings } = parseDoc(doc);
   const { prev, next } = getNeighbours(slug);
 
   return (
-    <article className="pb-8">
-      <Markdown content={doc.content} base={doc.slug} />
+    <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-8 sm:py-12 flex justify-center gap-8 xl:gap-12">
+      <article className="w-full max-w-3xl min-w-0">
+        <header className="seam-b mb-8 pb-6">
+          {doc.category && (
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <span className="chip">{doc.category}</span>
+            </div>
+          )}
 
-      {(prev || next) && (
-        <div className="mt-12 flex flex-col gap-3 sm:flex-row">
-          {prev && <NeighbourLink doc={prev} direction="prev" />}
-          {next && <NeighbourLink doc={next} direction="next" />}
-        </div>
-      )}
-    </article>
+          <h1 className="t-title text-2xl sm:text-3xl">{title}</h1>
+        </header>
+
+        <Markdown content={body} base={doc.slug} />
+
+        <DocNav prev={prev} next={next} />
+      </article>
+
+      <TableOfContents headings={headings} />
+    </div>
   );
 }

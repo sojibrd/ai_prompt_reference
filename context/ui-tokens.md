@@ -40,7 +40,8 @@
 | Control | `control` + `control--primary` `control--alert` `control--quiet` |
 | Chip | `chip` + `chip--accent` `chip--alert` `chip--ok` |
 | Callout | `callout` + `callout--accent` `callout--alert` |
-| Nav | `tab` `row` `overlay` `drawer-enter` |
+| Nav | `tab` `row` `overlay` `drawer-enter` `topic-group` |
+| **Doc chrome** | হেডার প্লেট `chip` + `t-title`, TOC `row` + `aria-current`, prev/next `surface-raised` |
 | **Doc** | **`doc-prose`** — লম্বা Markdown কলাম (heading, table, code, quote, list) |
 
 ### State attributes
@@ -50,6 +51,7 @@
 | `aria-current` | `.row` | বর্তমান নেভ আইটেম |
 | `aria-selected` | `.tab` | নির্বাচিত ট্যাব |
 | `aria-pressed` | `.control` | চালু অবস্থা |
+| `aria-expanded` | `.control` | সাইডবার ডিসক্লোজার (কোনো ভিজ্যুয়াল পরিবর্তন নেই — শুধু a11y) |
 
 ---
 

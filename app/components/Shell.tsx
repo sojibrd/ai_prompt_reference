@@ -1,59 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLocalStorage } from "../hooks/useLocalStorage";
+import Navbar from "./Navbar";
+import Sidebar from "./Sidebar";
+import { PanelLeftOpen } from "./icons";
 import type { Category } from "../lib/content";
-
-function NavLinks({ nav, onNavigate }: { nav: Category[]; onNavigate?: () => void }) {
-  const pathname = usePathname();
-  const current = pathname.replace(/^\/|\/$/g, "");
-
-  return (
-    <nav className="flex flex-col gap-5">
-      <Link
-        href="/"
-        onClick={onNavigate}
-        aria-current={current === ""}
-        className="row block px-2.5 py-1.5 text-sm"
-      >
-        ভূমিকা
-      </Link>
-
-      {nav.map((category) => {
-        const categorySlug = category.slug.join("/");
-        return (
-          <div key={categorySlug} className="flex flex-col gap-1">
-            <Link
-              href={`/${categorySlug}/`}
-              onClick={onNavigate}
-              aria-current={current === categorySlug}
-              className="row block px-2.5 py-1.5"
-            >
-              <span className="t-label">{category.title}</span>
-            </Link>
-            <div className="seam-l ml-3 flex flex-col gap-0.5 pl-2">
-              {category.topics.map((topic) => {
-                const topicSlug = topic.slug.join("/");
-                return (
-                  <Link
-                    key={topicSlug}
-                    href={`/${topicSlug}/`}
-                    onClick={onNavigate}
-                    aria-current={current === topicSlug}
-                    className="row block px-2.5 py-1.5 text-sm leading-snug"
-                  >
-                    {topic.title}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        );
-      })}
-    </nav>
-  );
-}
 
 export default function Shell({
   nav,
@@ -63,6 +16,10 @@ export default function Shell({
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  /* Folding the rail away is a deliberate act, so it outlives a refresh.
+     The server has no localStorage; the default keeps the rail visible for
+     the first paint and the client reconciles on hydration. */
+  const [collapsed, setCollapsed] = useLocalStorage("apr_nav_collapsed", false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -70,47 +27,53 @@ export default function Shell({
   }, [pathname]);
 
   return (
-    <div className="min-h-screen">
-      <header className="surface-panel seam-b-heavy sticky top-0 z-30 rounded-none border-x-0 border-t-0">
-        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
-          <button
-            onClick={() => setOpen(true)}
-            aria-label="মেনু"
-            className="control control--quiet px-2.5 py-1.5 lg:hidden"
-          >
-            ☰
-          </button>
-          <Link href="/" className="t-title text-sm">
-            প্রম্পট ইঞ্জিনিয়ারিং স্ট্যান্ডার্ড
-          </Link>
-          <a
-            href="https://github.com/sojibrd/ai_prompt_reference"
-            target="_blank"
-            rel="noreferrer"
-            className="control control--quiet ml-auto px-2.5 py-1.5 text-xs"
-          >
-            GitHub
-          </a>
-        </div>
-      </header>
+    /* The chassis owns the viewport and the two panes scroll inside it. A
+       sticky bar over a page-scrolled rail would have to hardcode the bar's
+       height, which changes between breakpoints. */
+    <div className="surface-app h-screen flex flex-col overflow-hidden">
+      <Navbar onOpenSidebar={() => setOpen(true)} />
 
-      <div className="mx-auto flex max-w-6xl gap-8 px-4">
-        <aside className="sticky top-16 hidden h-[calc(100vh-4rem)] w-72 shrink-0 overflow-y-auto py-8 lg:block">
-          <NavLinks nav={nav} />
+      <div className="flex flex-1 min-h-0">
+        {/* With no desktop top bar, this strip is the only way back to the
+            rail once it is folded away. */}
+        {collapsed && (
+          <div className="surface-panel hidden lg:flex shrink-0 flex-col items-center px-2 py-3">
+            <button
+              onClick={() => setCollapsed(false)}
+              className="control control--quiet p-1.5"
+              aria-label="সূচিপত্র খুলুন"
+              aria-expanded={false}
+              aria-controls="site-sidebar"
+            >
+              <PanelLeftOpen />
+            </button>
+          </div>
+        )}
+        {/* The permanent rail. This is a reference people move through often,
+            so `aria-current` stays on screen instead of behind a trigger. */}
+        <aside
+          id="site-sidebar"
+          className={`surface-panel hidden w-80 shrink-0 min-h-0 ${
+            collapsed ? "" : "lg:block"
+          }`}
+        >
+          <Sidebar nav={nav} onCollapse={() => setCollapsed(true)} />
         </aside>
 
-        <main className="min-w-0 flex-1 py-8">{children}</main>
+        {/* The page owns its own width and padding; this pane only scrolls. */}
+        <main className="flex-1 min-w-0 overflow-y-auto">{children}</main>
       </div>
 
       {open && (
-        <div className="fixed inset-0 z-40 lg:hidden">
-          <div
-            className="overlay absolute inset-0"
-            onClick={() => setOpen(false)}
-          />
-          <div className="drawer-enter surface-panel absolute inset-y-0 left-0 w-72 overflow-y-auto rounded-none border-y-0 border-l-0 p-4">
-            <NavLinks nav={nav} onNavigate={() => setOpen(false)} />
-          </div>
+        <div className="fixed inset-0 z-50 lg:hidden" aria-modal="true">
+          <div className="overlay absolute inset-0" onClick={() => setOpen(false)} />
+          <aside className="drawer-enter surface-panel absolute left-0 top-0 h-full w-[300px] sm:w-[360px]">
+            <Sidebar
+              nav={nav}
+              onClose={() => setOpen(false)}
+              onNavigate={() => setOpen(false)}
+            />
+          </aside>
         </div>
       )}
     </div>

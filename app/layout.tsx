@@ -39,9 +39,9 @@ const bengali = Noto_Sans_Bengali({
 });
 
 export const metadata: Metadata = {
-  title: "প্রম্পট ইঞ্জিনিয়ারিং স্ট্যান্ডার্ড",
+  title: "Prompt Reference",
   description:
-    "প্রম্পট ইঞ্জিনিয়ারিং-এর টেকনিক, প্যাটার্ন আর পরিচিত ফাঁদগুলোর একটা বাংলা রেফারেন্স।",
+    "A reference for the techniques, patterns, and common pitfalls of prompt engineering.",
   other: {
     "theme-color": "#17140f",
   },

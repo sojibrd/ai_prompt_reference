@@ -338,6 +338,20 @@ body {
     box-shadow: var(--t-tab-selected-shadow);
   }
 
+  /* --- Nav groups ------------------------------------------------------
+     Seamed off from the next category — except the last, which has nothing
+     to be separated from. Keeping the exception here spares the component a
+     `last:border-0` visual decision. */
+
+  .topic-group {
+    border-bottom: var(--t-seam-width) solid var(--t-seam);
+  }
+
+  .topic-group:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
   /* --- List rows (the nav index) --------------------------------------- */
 
   .row {
