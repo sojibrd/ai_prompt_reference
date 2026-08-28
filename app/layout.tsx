@@ -1,18 +1,40 @@
 import type { Metadata } from "next";
-import { Noto_Sans_Bengali, Geist_Mono } from "next/font/google";
+import {
+  Barlow_Semi_Condensed,
+  JetBrains_Mono,
+  Noto_Sans_Bengali,
+} from "next/font/google";
 import "./globals.css";
 import { getNav } from "./lib/content";
 import Shell from "./components/Shell";
 
-const bengali = Noto_Sans_Bengali({
-  variable: "--font-bengali",
-  subsets: ["bengali", "latin"],
+/**
+ * The font shelf. Families are declared once, each on its own variable; the
+ * theme picks which role gets which family via `--t-font-sans` /
+ * `--t-font-mono` / `--t-doc-family`.
+ *
+ * Bengali is on the shelf because the Latin faces carry no Bengali glyphs —
+ * without it the browser falls back silently and the reference loses the
+ * theme's typography exactly where most of the reading happens.
+ *
+ * Adding a family no theme uses yet is the ONLY reason to edit this file.
+ */
+const condensed = Barlow_Semi_Condensed({
+  variable: "--font-condensed",
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
   display: "swap",
 });
 
-const mono = Geist_Mono({
-  variable: "--font-mono-code",
+const mono = JetBrains_Mono({
+  variable: "--font-mono-family",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const bengali = Noto_Sans_Bengali({
+  variable: "--font-bengali",
+  subsets: ["bengali", "latin"],
   display: "swap",
 });
 
@@ -21,7 +43,7 @@ export const metadata: Metadata = {
   description:
     "প্রম্পট ইঞ্জিনিয়ারিং-এর টেকনিক, প্যাটার্ন আর পরিচিত ফাঁদগুলোর একটা বাংলা রেফারেন্স।",
   other: {
-    "theme-color": "#4f46e5",
+    "theme-color": "#17140f",
   },
 };
 
@@ -33,23 +55,8 @@ export default function RootLayout({
   return (
     <html
       lang="bn"
-      suppressHydrationWarning
-      className={`${bengali.variable} ${mono.variable} h-full antialiased`}
+      className={`${condensed.variable} ${mono.variable} ${bengali.variable} h-full antialiased`}
     >
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                var stored = localStorage.getItem('theme');
-                var dark = stored ? stored === 'dark'
-                  : window.matchMedia('(prefers-color-scheme: dark)').matches;
-                if (dark) document.documentElement.classList.add('dark');
-              } catch (e) {}
-            `,
-          }}
-        />
-      </head>
       <body className="min-h-full">
         <Shell nav={nav}>{children}</Shell>
       </body>

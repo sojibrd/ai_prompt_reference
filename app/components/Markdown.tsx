@@ -30,7 +30,7 @@ export default function Markdown({
   base: string[];
 }) {
   return (
-    <div className="doc-prose prose prose-zinc max-w-none dark:prose-invert">
+    <div className="doc-prose max-w-none">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{

@@ -6,12 +6,12 @@ function NeighbourLink({ doc, direction }: { doc: Doc; direction: "prev" | "next
   return (
     <Link
       href={href(doc.slug)}
-      className="glass-panel flex-1 rounded-xl px-4 py-3 transition-colors hover:border-[var(--primary)]"
+      className="surface-raised flex-1 px-4 py-3"
     >
-      <div className="text-xs text-[var(--muted)]">
+      <div className="t-label">
         {direction === "prev" ? "← আগের" : "পরের →"}
       </div>
-      <div className="mt-0.5 text-sm font-medium">{doc.title}</div>
+      <div className="t-body mt-1 text-sm">{doc.title}</div>
     </Link>
   );
 }

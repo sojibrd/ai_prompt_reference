@@ -5,67 +5,34 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { Category } from "../lib/content";
 
-function ThemeToggle() {
-  const [dark, setDark] = useState(false);
-
-  useEffect(() => {
-    setDark(document.documentElement.classList.contains("dark"));
-  }, []);
-
-  function toggle() {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    try {
-      localStorage.setItem("theme", next ? "dark" : "light");
-    } catch {
-      /* private mode — theme just won't persist */
-    }
-  }
-
-  return (
-    <button
-      onClick={toggle}
-      aria-label="থিম পরিবর্তন"
-      className="rounded-lg px-2.5 py-1.5 text-sm text-[var(--muted)] hover:bg-[var(--primary-soft)] hover:text-[var(--primary)]"
-    >
-      {dark ? "☀" : "☾"}
-    </button>
-  );
-}
-
 function NavLinks({ nav, onNavigate }: { nav: Category[]; onNavigate?: () => void }) {
   const pathname = usePathname();
   const current = pathname.replace(/^\/|\/$/g, "");
 
-  const linkClass = (slug: string) =>
-    [
-      "block rounded-lg px-3 py-1.5 text-sm transition-colors",
-      current === slug
-        ? "bg-[var(--primary-soft)] font-medium text-[var(--primary)]"
-        : "text-[var(--muted)] hover:bg-[var(--primary-soft)] hover:text-[var(--foreground)]",
-    ].join(" ");
-
   return (
-    <nav className="space-y-6">
-      <Link href="/" onClick={onNavigate} className={linkClass("")}>
+    <nav className="flex flex-col gap-5">
+      <Link
+        href="/"
+        onClick={onNavigate}
+        aria-current={current === ""}
+        className="row block px-2.5 py-1.5 text-sm"
+      >
         ভূমিকা
       </Link>
 
       {nav.map((category) => {
         const categorySlug = category.slug.join("/");
         return (
-          <div key={categorySlug} className="space-y-1">
+          <div key={categorySlug} className="flex flex-col gap-1">
             <Link
               href={`/${categorySlug}/`}
               onClick={onNavigate}
-              className={`${linkClass(categorySlug)} !font-semibold !text-[var(--foreground)] ${
-                current === categorySlug ? "bg-[var(--primary-soft)]" : ""
-              }`}
+              aria-current={current === categorySlug}
+              className="row block px-2.5 py-1.5"
             >
-              {category.title}
+              <span className="t-label">{category.title}</span>
             </Link>
-            <div className="ml-3 space-y-0.5 border-l border-[var(--card-border)] pl-2">
+            <div className="seam-l ml-3 flex flex-col gap-0.5 pl-2">
               {category.topics.map((topic) => {
                 const topicSlug = topic.slug.join("/");
                 return (
@@ -73,7 +40,8 @@ function NavLinks({ nav, onNavigate }: { nav: Category[]; onNavigate?: () => voi
                     key={topicSlug}
                     href={`/${topicSlug}/`}
                     onClick={onNavigate}
-                    className={linkClass(topicSlug)}
+                    aria-current={current === topicSlug}
+                    className="row block px-2.5 py-1.5 text-sm leading-snug"
                   >
                     {topic.title}
                   </Link>
@@ -103,29 +71,26 @@ export default function Shell({
 
   return (
     <div className="min-h-screen">
-      <header className="sticky top-0 z-30 glass-panel border-x-0 border-t-0">
+      <header className="surface-panel seam-b-heavy sticky top-0 z-30 rounded-none border-x-0 border-t-0">
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
           <button
             onClick={() => setOpen(true)}
             aria-label="মেনু"
-            className="rounded-lg px-2.5 py-1.5 text-[var(--muted)] hover:bg-[var(--primary-soft)] lg:hidden"
+            className="control control--quiet px-2.5 py-1.5 lg:hidden"
           >
             ☰
           </button>
-          <Link href="/" className="font-semibold">
+          <Link href="/" className="t-title text-sm">
             প্রম্পট ইঞ্জিনিয়ারিং স্ট্যান্ডার্ড
           </Link>
-          <div className="ml-auto flex items-center gap-1">
-            <a
-              href="https://github.com/sojibrd/ai_prompt_reference"
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-lg px-2.5 py-1.5 text-sm text-[var(--muted)] hover:bg-[var(--primary-soft)] hover:text-[var(--primary)]"
-            >
-              GitHub
-            </a>
-            <ThemeToggle />
-          </div>
+          <a
+            href="https://github.com/sojibrd/ai_prompt_reference"
+            target="_blank"
+            rel="noreferrer"
+            className="control control--quiet ml-auto px-2.5 py-1.5 text-xs"
+          >
+            GitHub
+          </a>
         </div>
       </header>
 
@@ -140,10 +105,10 @@ export default function Shell({
       {open && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div
-            className="absolute inset-0 bg-black/40"
+            className="overlay absolute inset-0"
             onClick={() => setOpen(false)}
           />
-          <div className="animate-slide-in-left glass-panel absolute inset-y-0 left-0 w-72 overflow-y-auto p-4">
+          <div className="drawer-enter surface-panel absolute inset-y-0 left-0 w-72 overflow-y-auto rounded-none border-y-0 border-l-0 p-4">
             <NavLinks nav={nav} onNavigate={() => setOpen(false)} />
           </div>
         </div>
