@@ -72,3 +72,72 @@ export function ArrowRight() {
     </svg>
   );
 }
+
+export function Check() {
+  return (
+    <svg {...base} width={13} height={13} aria-hidden="true">
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  );
+}
+
+export function Circle() {
+  return (
+    <svg {...base} width={13} height={13} aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+    </svg>
+  );
+}
+
+export function RotateCcw() {
+  return (
+    <svg {...base} width={13} height={13} aria-hidden="true">
+      <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+      <path d="M3 3v5h5" />
+    </svg>
+  );
+}
+
+export function NotebookPen() {
+  return (
+    <svg {...base} width={13} height={13} aria-hidden="true">
+      <path d="M4 3h11v8" />
+      <path d="M4 3v18h12" />
+      <path d="M4 8h4M4 13h4M4 18h4" />
+      <path d="m20 9-6.5 6.5-.5 2.5 2.5-.5L22 11z" />
+    </svg>
+  );
+}
+
+export function ChevronDown() {
+  return (
+    <svg {...base} width={12} height={12} aria-hidden="true">
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
+
+export function ChevronUp() {
+  return (
+    <svg {...base} width={12} height={12} aria-hidden="true">
+      <path d="m18 15-6-6-6 6" />
+    </svg>
+  );
+}
+
+export function Search() {
+  return (
+    <svg {...base} width={13} height={13} aria-hidden="true">
+      <circle cx="11" cy="11" r="7" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+  );
+}
+
+export function X() {
+  return (
+    <svg {...base} width={12} height={12} aria-hidden="true">
+      <path d="M18 6 6 18M6 6l12 12" />
+    </svg>
+  );
+}

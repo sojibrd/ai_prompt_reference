@@ -41,6 +41,7 @@
 | Chip | `chip` + `chip--accent` `chip--alert` `chip--ok` |
 | Callout | `callout` + `callout--accent` `callout--alert` |
 | Nav | `tab` `row` `overlay` `drawer-enter` `topic-group` |
+| **Gauge** | **`gauge` / `gauge-fill`** — অনুপাত দেখানো বার |
 | **Doc chrome** | হেডার প্লেট `chip` + `t-title`, TOC `row` + `aria-current`, prev/next `surface-raised` |
 | **Doc** | **`doc-prose`** — লম্বা Markdown কলাম (heading, table, code, quote, list) |
 
@@ -49,7 +50,7 @@
 | অ্যাট্রিবিউট | কোথায় | অর্থ |
 |---|---|---|
 | `aria-current` | `.row` | বর্তমান নেভ আইটেম |
-| `aria-selected` | `.tab` | নির্বাচিত ট্যাব |
+| `aria-selected` | `.tab` | নির্বাচিত ট্যাব (অগ্রগতি পেজের ফিল্টার) |
 | `aria-pressed` | `.control` | চালু অবস্থা |
 | `aria-expanded` | `.control` | সাইডবার ডিসক্লোজার (কোনো ভিজ্যুয়াল পরিবর্তন নেই — শুধু a11y) |
 
@@ -65,6 +66,7 @@
 - **Surface:** `panel-*` `raised-*` `well-*` `seam` `seam-heavy`
 - **Control:** `control-*` `primary-*` `alert-*`
 - **Chip / Callout:** `chip-*` `callout-*`
+- **Gauge:** `gauge-track` `gauge-border|border-width` `gauge-radius` `gauge-fill` `gauge-fill-glow`
 - **Nav:** `tab-*` `scrollbar-*` `drawer-animation`
 - **Doc prose:** `doc-family` `doc-size` `doc-leading` `doc-flow` `doc-flow-tight` `doc-heading-lead` `doc-body` `doc-heading` `doc-strong` `doc-link` `doc-link-hover` `doc-marker` `doc-bullet` `doc-heading-family|weight|tracking|transform` `doc-h1|h2|h3|h4-size` `doc-code-fg|bg|border` `doc-pre-fg`
 

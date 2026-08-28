@@ -1,7 +1,9 @@
 import Markdown from "./Markdown";
 import DocNav from "./DocNav";
+import DocTracker from "./DocTracker";
 import TableOfContents from "./TableOfContents";
 import { getDoc, getNeighbours, parseDoc } from "../lib/content";
+import { href } from "../lib/href";
 
 export default function DocPage({ slug }: { slug: string[] }) {
   const doc = getDoc(slug);
@@ -24,6 +26,9 @@ export default function DocPage({ slug }: { slug: string[] }) {
         </header>
 
         <Markdown content={body} base={doc.slug} />
+
+        {/* Home and the category indexes are contents pages, not reading. */}
+        {doc.slug.length === 2 && <DocTracker route={href(doc.slug)} />}
 
         <DocNav prev={prev} next={next} />
       </article>

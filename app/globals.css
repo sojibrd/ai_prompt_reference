@@ -382,6 +382,25 @@ body {
     outline-offset: 2px;
   }
 
+  /* --- Gauge ------------------------------------------------------------
+     A proportion made visible. The fill is the one thing in this theme that
+     glows; everything else stays matte. */
+
+  .gauge {
+    background-color: var(--t-gauge-track);
+    border: var(--t-gauge-border-width) solid var(--t-gauge-border);
+    border-radius: var(--t-gauge-radius);
+    box-shadow: var(--t-well-shadow);
+    overflow: hidden;
+  }
+
+  .gauge-fill {
+    height: 100%;
+    background-color: var(--t-gauge-fill);
+    box-shadow: var(--t-gauge-fill-glow);
+    transition: width 400ms var(--t-ease);
+  }
+
   /* --- Modal overlay --------------------------------------------------- */
 
   .overlay {

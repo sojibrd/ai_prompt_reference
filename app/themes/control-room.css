@@ -119,6 +119,14 @@
   /* --- Seams ----------------------------------------------------------- */
   --t-seam: var(--bezel);
   --t-seam-width: 1px;
+
+  /* --- Gauge ----------------------------------------------------------- */
+  --t-gauge-track: var(--well);
+  --t-gauge-border: var(--bezel);
+  --t-gauge-border-width: 1px;
+  --t-gauge-radius: 2px;
+  --t-gauge-fill: var(--amber);
+  --t-gauge-fill-glow: 0 0 10px -2px rgb(255 176 32 / 0.8);
   --t-seam-heavy: var(--bezel-strong);
   --t-seam-heavy-width: 1px;
 

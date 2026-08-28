@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import Navbar from "./Navbar";
@@ -21,10 +21,37 @@ export default function Shell({
      the first paint and the client reconciles on hydration. */
   const [collapsed, setCollapsed] = useLocalStorage("apr_nav_collapsed", false);
   const pathname = usePathname();
+  const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  /* `/` and Ctrl+K reach the rail's search from anywhere. A folded rail is
+     unfolded first, or the focus would land on an input nobody can see. */
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const typing =
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT" ||
+          target.isContentEditable);
+
+      const slash = event.key === "/" && !typing;
+      const ctrlK = (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k";
+      if (!slash && !ctrlK) return;
+
+      event.preventDefault();
+      setCollapsed(false);
+      searchRef.current?.focus();
+      searchRef.current?.select();
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [setCollapsed]);
 
   return (
     /* The chassis owns the viewport and the two panes scroll inside it. A
@@ -57,7 +84,11 @@ export default function Shell({
             collapsed ? "" : "lg:block"
           }`}
         >
-          <Sidebar nav={nav} onCollapse={() => setCollapsed(true)} />
+          <Sidebar
+            nav={nav}
+            onCollapse={() => setCollapsed(true)}
+            searchRef={searchRef}
+          />
         </aside>
 
         {/* The page owns its own width and padding; this pane only scrolls. */}

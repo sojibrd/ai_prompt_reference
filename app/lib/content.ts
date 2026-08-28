@@ -138,6 +138,16 @@ export function parseDoc(doc: Doc): {
   return { title: title || doc.title, body, headings: extractHeadings(body) };
 }
 
+/**
+ * The pages progress is counted over: the techniques themselves.
+ *
+ * Home and the category indexes are tables of contents, not reading; counting
+ * them would make the percentage lie about how much has actually been read.
+ */
+export function getTechniqueDocs(): Doc[] {
+  return getAllDocs().filter((doc) => doc.slug.length === 2);
+}
+
 export function getDoc(slug: string[]): Doc | undefined {
   const key = slug.join("/");
   return getAllDocs().find((doc) => doc.slug.join("/") === key);
